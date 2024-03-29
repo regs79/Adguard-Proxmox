@@ -6,6 +6,7 @@ read -p 'Container Name: ' name
 read -p 'CPU Cores: ' cpu
 read -p 'Static IP Address Of container(/CIDR) eg 192.168.1.20/24: ' ip
 read -p 'Default Gateway eg 192.168.1.1: ' gw
+read -p 'Storage name eg local-lvm or local-zfs: ' storage
 brctl show
 read -p 'From the above list, please specify bridge name for the container network (e.g., vmbr0): ' bridge
 
@@ -37,7 +38,7 @@ if pct list | grep -qw "$number"; then
 fi
 
 # Create and start the container on local-lvm storage
-pct create $number --storage local-lvm --ostype alpine --hostname "$name" --net0 name=eth0,ip="$ip",gw="$gw",bridge="$bridge" --memory 512 --cores $cpu --unprivileged 1 --cmode shell --onboot 1 local:vztmpl/$latest_alpine_template
+pct create $number --storage "$storage" --ostype alpine --hostname "$name" --net0 name=eth0,ip="$ip",gw="$gw",bridge="$bridge" --memory 512 --cores $cpu --unprivileged 1 --cmode shell --onboot 1 local:vztmpl/$latest_alpine_template
 pct start $number
 
 # Basic container setup
